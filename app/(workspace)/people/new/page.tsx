@@ -134,26 +134,53 @@ export default function NewPerson() {
 
                 {/* Custom URL Option */}
                 {useCustomAvatar && (
-                  <input
-                    type="url"
-                    value={customAvatarUrl}
-                    onChange={(e) => setCustomAvatarUrl(e.target.value)}
-                    placeholder="Paste image URL (HTTPS)..."
-                    className="
-                      px-4 
-                      py-2.5 
-                      bg-white/60 
-                      border 
-                      border-white/40 
-                      rounded-custom-sm 
-                      text-[14px] 
-                      text-text-main
-                      placeholder-text-sub
-                      focus:outline-none 
-                      focus:border-black/20 
-                      w-80
-                    "
-                  />
+                  <div className="flex flex-col gap-3">
+                    <input
+                      type="text"
+                      value={customAvatarUrl}
+                      onChange={(e) => setCustomAvatarUrl(e.target.value)}
+                      placeholder="Paste image URL (HTTPS)..."
+                      className="
+                        px-4 
+                        py-2.5 
+                        bg-white/60 
+                        border 
+                        border-white/40 
+                        rounded-custom-sm 
+                        text-[14px] 
+                        text-text-main
+                        placeholder-text-sub
+                        focus:outline-none 
+                        focus:border-black/20 
+                        w-80
+                      "
+                    />
+                    
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Or Upload Image File</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            if (file.size > 2 * 1024 * 1024) {
+                              alert("Image is too large. Please select an image under 2MB.");
+                              return;
+                            }
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                setCustomAvatarUrl(reader.result);
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        className="text-[12px] text-text-sub file:mr-3 file:py-2 file:px-4 file:rounded-custom-sm file:border-0 file:text-[12px] file:font-bold file:bg-black file:text-white file:cursor-pointer hover:file:bg-black/80"
+                      />
+                    </div>
+                  </div>
                 )}
 
                 <button
@@ -161,7 +188,7 @@ export default function NewPerson() {
                   onClick={() => setUseCustomAvatar(!useCustomAvatar)}
                   className="text-[12px] font-bold text-accent-blue hover:underline text-left self-start mt-1"
                 >
-                  {useCustomAvatar ? "Use preset avatars" : "Use custom image URL"}
+                  {useCustomAvatar ? "Use preset avatars" : "Use custom URL or Upload photo"}
                 </button>
               </div>
             </div>

@@ -483,14 +483,53 @@ export default function PersonProfile({ params }: PageProps) {
                   </div>
 
                   {/* Avatar URL field */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Avatar Image URL</label>
-                    <input
-                      type="text"
-                      value={editAvatarUrl}
-                      onChange={(e) => setEditAvatarUrl(e.target.value)}
-                      className="px-4 py-3 bg-white/60 border border-white/40 rounded-custom-sm text-[14px] text-text-main focus:outline-none focus:border-black/20"
-                    />
+                  <div className="flex flex-col gap-2.5">
+                    <div className="flex items-center gap-4">
+                      <img 
+                        src={editAvatarUrl} 
+                        alt="preview" 
+                        className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md shrink-0" 
+                        onError={(e) => {
+                          // Handle image load error if URL is broken
+                          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80";
+                        }}
+                      />
+                      <div className="flex-1 flex flex-col gap-1">
+                        <label className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Avatar Image URL</label>
+                        <input
+                          type="text"
+                          value={editAvatarUrl}
+                          onChange={(e) => setEditAvatarUrl(e.target.value)}
+                          className="px-4 py-2 bg-white/60 border border-white/40 rounded-custom-sm text-[13px] text-text-main focus:outline-none focus:border-black/20"
+                          placeholder="Paste image URL (HTTPS)..."
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-col gap-1.5 mt-1">
+                      <label className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Or Upload Image File</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            if (file.size > 2 * 1024 * 1024) {
+                              alert("Image is too large. Please select an image under 2MB.");
+                              return;
+                            }
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                setEditAvatarUrl(reader.result);
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        className="text-[12px] text-text-sub file:mr-3 file:py-2 file:px-4 file:rounded-custom-sm file:border-0 file:text-[12px] file:font-bold file:bg-black file:text-white file:cursor-pointer hover:file:bg-black/80"
+                      />
+                    </div>
                   </div>
 
                   {/* Relationship Score Slider */}

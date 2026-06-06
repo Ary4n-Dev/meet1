@@ -362,6 +362,32 @@ export default function Sidebar({ className = '' }: SidebarProps) {
                         className="px-4 py-2 bg-white/60 border border-white/40 rounded-custom-sm text-[13px] text-text-main focus:outline-none focus:border-black/20"
                       />
                     </div>
+
+                    {/* Upload Local Photo Option */}
+                    <div className="flex flex-col gap-1.5 mt-1">
+                      <label className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Or Upload Local Image</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            if (file.size > 2 * 1024 * 1024) {
+                              alert("Image is too large. Please select an image under 2MB.");
+                              return;
+                            }
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                setEditAvatar(reader.result);
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        className="text-[12px] text-text-sub file:mr-3 file:py-2 file:px-4 file:rounded-custom-sm file:border-0 file:text-[12px] file:font-bold file:bg-black file:text-white file:cursor-pointer hover:file:bg-black/80"
+                      />
+                    </div>
                   </div>
 
                   {/* Input Name */}
