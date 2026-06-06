@@ -321,7 +321,15 @@ export default function Sidebar({ className = '' }: SidebarProps) {
                   <div className="flex flex-col gap-2.5">
                     <label className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Choose Avatar</label>
                     <div className="flex items-center gap-4">
-                      <img src={editAvatar} alt="preview" className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md" />
+                      <img 
+                        src={editAvatar} 
+                        alt="preview" 
+                        className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md shrink-0" 
+                        onError={(e) => {
+                          // Handle image load error if URL is broken
+                          (e.target as HTMLImageElement).src = PROFILE_AVATAR_PRESETS[0];
+                        }}
+                      />
                       <div className="flex gap-2">
                         {PROFILE_AVATAR_PRESETS.map((preset, idx) => (
                           <button
@@ -341,6 +349,18 @@ export default function Sidebar({ className = '' }: SidebarProps) {
                           </button>
                         ))}
                       </div>
+                    </div>
+                    
+                    {/* Custom Avatar URL Input */}
+                    <div className="flex flex-col gap-1.5 mt-1">
+                      <label className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Or Paste Custom Photo URL</label>
+                      <input
+                        type="text"
+                        value={editAvatar}
+                        onChange={(e) => setEditAvatar(e.target.value)}
+                        placeholder="https://example.com/photo.jpg"
+                        className="px-4 py-2 bg-white/60 border border-white/40 rounded-custom-sm text-[13px] text-text-main focus:outline-none focus:border-black/20"
+                      />
                     </div>
                   </div>
 
